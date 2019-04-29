@@ -3,6 +3,7 @@ import {StyleSheet, View, TextInput, Button, FlatList,ScrollView,ActivityIndicat
 import films from '../Helpers/filmsData'
 import FilmItem from './filmItems';
 import { getFilmsFromApiWithSearchText } from '../API/TMDBApi';
+import { connect } from 'react-redux' // afin de conncter notre component au store
 
 //Creation d'une class qui herite de React.Component
 class Search extends React.Component {
@@ -71,6 +72,7 @@ class Search extends React.Component {
   }
  
   
+  
 
   render(){
       return (
@@ -93,7 +95,14 @@ class Search extends React.Component {
                 }}
                 //  qui correspond aux données affichées dans la liste. Ici, on renseignera nos films ;
                 data={this.state.films}
-                
+                renderItem={({item}) =>
+            <FilmItem
+              film={item}
+              // Ajout d'une props isFilmFavorite pour indiquer à l'item d'afficher un 🖤 ou non
+              isFilmFavorite={(this.props.favoritesFilm.findIndex(film => film.id === item.id) !== -1) ? true : false}
+              displayDetailForFilm={this._displayDetailForFilm}
+            />
+          }
                 /* qui correspond au fait que notre item doit etre identifié de maniere unique
                 *Depuis les dernières versions de React Native, la propriété key du keyExtractor doit être une chaîne de caractères. 
                 C'est pourquoi j'ai ajouté la fonction  .toString()  ici, pour convertir notre identifiant de film en chaîne de caractères.*/
@@ -134,5 +143,12 @@ const styles = StyleSheet.create( {
     justifyContent: 'center'
   }
 })
+
+// On connecte le store Redux, ainsi que les films favoris du state de notre application, à notre component Search
+const mapStateToProps = state => {
+  return {
+    favoritesFilm: state.favoritesFilm
+  }
+}
 // Afin d'exporter notre application
-export default Search
+export default connect(mapStateToProps)(Search)

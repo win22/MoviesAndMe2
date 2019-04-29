@@ -5,6 +5,18 @@ import {getImageFromApi} from '../API/TMDBApi'
 import { StyleSheet, View, Text, Image, TouchableOpacity } from 'react-native'
 
 class FilmItem extends React.Component {
+
+  _displayFavoriteImage() {
+    if (this.props.isFilmFavorite) {
+      // Si la props isFilmFavorite vaut true, on affiche le 🖤
+      return (
+        <Image
+          style={styles.favorite_image}
+          source={require('../Images/ic_favorite.png')}
+        />
+      )
+    }
+  }
   render() {
    /* console.log(this.props) 
     pour afficher les données qui sont recupéré dans le log
@@ -91,6 +103,11 @@ const styles = StyleSheet.create({
   date_text: {
     textAlign: 'right',
     fontSize: 14
+  },
+  favorite_image: {
+    width: 25,
+    height: 25,
+    marginRight: 5
   }
 })
 
